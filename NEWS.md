@@ -1,5 +1,6 @@
 # vastR 0.6.34
 
+- 作者 / Maintainer：ZhangJing \<zj391120@163.com\>
 - 支持列索引：`vast_build_index` / `vast_attach_index` / `vast_detach_index`
 - 支持全文件排序：`vast_sort`，以及 `arrange.vast_tbl`
 - `dplyr` 风格 `filter` / `select` / `arrange` / `distinct`
