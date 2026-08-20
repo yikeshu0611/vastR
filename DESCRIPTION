@@ -1,0 +1,16 @@
+Package: vastR
+Type: Package
+Title: Drive the Vast Large-File Viewer from RStudio
+Version: 0.6.34
+Authors@R: person("Vast", email = "vast@local", role = c("aut", "cre"))
+Description: Open large files in the Vast macOS viewer from R with tidyverse-
+    compatible dplyr verbs (filter, select, arrange), pipe workflows, and row slices
+    without loading the whole file into memory.
+License: MIT
+Depends: R (>= 4.0)
+Imports: dplyr, jsonlite, rlang, tidyselect, utils, vroom
+SystemRequirements: Vast.app (macOS), curl
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/yikeshu0611/vastR
+BugReports: https://github.com/yikeshu0611/vastR/issues
