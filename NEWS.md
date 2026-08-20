@@ -1,3 +1,7 @@
+# vastR 0.6.36
+
+- Bundle / support paths: `com.zhangjing.Vast`
+
 # vastR 0.6.35
 
 - UI / docs / messages: English for global users

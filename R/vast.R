@@ -4,16 +4,16 @@
 
 vast_api_candidates <- function() {
   if (.Platform$OS.type == "windows") {
-    return(file.path(Sys.getenv("APPDATA"), "com.qo.vast", "api.json"))
+    return(file.path(Sys.getenv("APPDATA"), "com.zhangjing.Vast", "api.json"))
   }
   home <- Sys.getenv("HOME")
   c(
     # Direct / Developer ID build
-    file.path(home, "Library", "Application Support", "com.qo.vast", "api.json"),
-    # Mac App Store sandboxed container (bundle id com.qo.vast)
+    file.path(home, "Library", "Application Support", "com.zhangjing.Vast", "api.json"),
+    # Mac App Store sandboxed container (bundle id com.zhangjing.Vast)
     file.path(
-      home, "Library", "Containers", "com.qo.vast", "Data",
-      "Library", "Application Support", "com.qo.vast", "api.json"
+      home, "Library", "Containers", "com.zhangjing.Vast", "Data",
+      "Library", "Application Support", "com.zhangjing.Vast", "api.json"
     )
   )
 }
@@ -44,14 +44,14 @@ vast_api_file <- function() {
 
 vast_log_path <- function() {
   if (.Platform$OS.type == "windows") {
-    return(file.path(Sys.getenv("APPDATA"), "com.qo.vast", "vast.log"))
+    return(file.path(Sys.getenv("APPDATA"), "com.zhangjing.Vast", "vast.log"))
   }
   home <- Sys.getenv("HOME")
   cands <- c(
-    file.path(home, "Library", "Application Support", "com.qo.vast", "vast.log"),
+    file.path(home, "Library", "Application Support", "com.zhangjing.Vast", "vast.log"),
     file.path(
-      home, "Library", "Containers", "com.qo.vast", "Data",
-      "Library", "Application Support", "com.qo.vast", "vast.log"
+      home, "Library", "Containers", "com.zhangjing.Vast", "Data",
+      "Library", "Application Support", "com.zhangjing.Vast", "vast.log"
     )
   )
   existing <- cands[file.exists(cands)]

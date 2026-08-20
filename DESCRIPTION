@@ -1,7 +1,7 @@
 Package: vastR
 Type: Package
 Title: Drive the Vast Large-File Viewer from RStudio
-Version: 0.6.35
+Version: 0.6.36
 Authors@R: person("ZhangJing", email = "zj391120@163.com", role = c("aut", "cre"))
 Maintainer: ZhangJing <zj391120@163.com>
 Description: Open large files in the Vast macOS viewer from R with tidyverse-

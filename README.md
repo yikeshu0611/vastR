@@ -79,7 +79,7 @@ vast_view(mtcars)
 
 ## Notes
 
-- While Vast is running it writes `~/Library/Application Support/com.qo.vast/api.json` (or under the Mac App Store container). `vastR` discovers both paths.
+- While Vast is running it writes `~/Library/Application Support/com.zhangjing.Vast/api.json` (or under the Mac App Store container). `vastR` discovers both paths.
 - On the sandboxed build, the first API open of a file outside the sandbox may ask you to pick the file once in Vast.
 
 ## License
