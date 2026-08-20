@@ -4,7 +4,8 @@
 
 vast_api_candidates <- function() {
   if (.Platform$OS.type == "windows") {
-    return(file.path(Sys.getenv("APPDATA"), "com.zhangjing.Vast", "api.json"))
+    return(c(file.path(Sys.getenv("APPDATA"), "com.zhangjing.Vast", "api.json"),
+             file.path(Sys.getenv("APPDATA"), "com.qo.vast", "api.json")))
   }
   home <- Sys.getenv("HOME")
   c(
@@ -14,6 +15,12 @@ vast_api_candidates <- function() {
     file.path(
       home, "Library", "Containers", "com.zhangjing.Vast", "Data",
       "Library", "Application Support", "com.zhangjing.Vast", "api.json"
+    ),
+    # Legacy bundle id (pre-0.6.36)
+    file.path(home, "Library", "Application Support", "com.qo.vast", "api.json"),
+    file.path(
+      home, "Library", "Containers", "com.qo.vast", "Data",
+      "Library", "Application Support", "com.qo.vast", "api.json"
     )
   )
 }
