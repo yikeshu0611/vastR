@@ -1,19 +1,17 @@
 \name{vast_view}
-\alias{vast_view}
-\title{vast_view: 查看数据框}
+\title{vast_view: view a data frame}
 \description{
-把 data.frame / matrix 写成临时 TSV 并在 Vast 中打开；若传入文件路径则等同 \code{vast_open}。
+Write a data.frame / matrix to a temporary TSV and open it in Vast.
+If \code{x} is an existing file path, behaves like \code{vast_open}.
 }
 \usage{
 vast_view(x, title = NULL, ...)
 }
 \arguments{
-\item{x}{data.frame、matrix，或已存在的文件路径。}
-\item{title}{临时文件名前缀。}
-\item{...}{当 \code{x} 为路径时传给 \code{vast_open}。}
+\item{x}{A data.frame, matrix, or existing file path.}
+\item{title}{Prefix for the temporary file name.}
+\item{...}{Passed to \code{vast_open} when \code{x} is a path.}
 }
 \examples{
-\dontrun{
 vast_view(mtcars)
-}
 }

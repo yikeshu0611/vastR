@@ -1,13 +1,18 @@
+# vastR 0.6.35
+
+- UI / docs / messages: English for global users
+- Author / Maintainer: ZhangJing \<zj391120@163.com\>
+
 # vastR 0.6.34
 
-- 作者 / Maintainer：ZhangJing \<zj391120@163.com\>
-- 支持列索引：`vast_build_index` / `vast_attach_index` / `vast_detach_index`
-- 支持全文件排序：`vast_sort`，以及 `arrange.vast_tbl`
-- `dplyr` 风格 `filter` / `select` / `arrange` / `distinct`
-- 自动发现沙盒 Container 与经典路径下的 `api.json`
-- 相对索引路径解析到数据文件同目录
-- 空 body 的 detach 请求使用 `{}`，避免误发 `[]`
+- Author / Maintainer: ZhangJing \<zj391120@163.com\>
+- Column index: `vast_build_index` / `vast_attach_index` / `vast_detach_index`
+- Full-file sort: `vast_sort` and `arrange.vast_tbl`
+- dplyr-style `filter` / `select` / `arrange` / `distinct`
+- Auto-discover `api.json` under the classic path and the MAS container
+- Relative index paths resolve next to the source file
+- Empty detach body uses `{}` (not `[]`)
 
 # vastR 0.6.2+
 
-- 初版：`vast_open`、导出切片、`vast_find` / `vast_goto` / `vast_layout`
+- Initial: `vast_open`, export slices, `vast_find` / `vast_goto` / `vast_layout`

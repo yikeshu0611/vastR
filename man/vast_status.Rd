@@ -1,14 +1,11 @@
 \name{vast_status}
-\alias{vast_status}
-\title{vast_status: 查询状态}
+\title{vast_status: query status}
 \description{
-返回当前 Vast 窗口打开的文件路径、行数、分列符、标题行等状态。
+Return status for the file open in Vast: path, line count, delimiter, header rows, and related fields.
 }
 \usage{
 vast_status()
 }
 \examples{
-\dontrun{
 vast_status()
-}
 }

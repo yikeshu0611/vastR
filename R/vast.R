@@ -104,7 +104,7 @@ vast_ensure <- function(timeout = 15) {
   app <- vast_app_path()
   if (.Platform$OS.type == "windows") {
     if (!file.exists(app)) {
-      stop("找不到 Vast.exe。请先安装到 Program Files\\Vast\\Vast.exe", call. = FALSE)
+      stop("Vast.exe not found. Install to Program Files\\Vast\\Vast.exe", call. = FALSE)
     }
     cmd <- sprintf(
       "powershell -NoProfile -WindowStyle Hidden -Command \"Start-Process -FilePath '%s' -ArgumentList '--api' -WindowStyle Hidden\"",
@@ -113,20 +113,20 @@ vast_ensure <- function(timeout = 15) {
     ok <- suppressWarnings(system(cmd, wait = FALSE, invisible = TRUE))
   } else {
     if (!dir.exists(app)) {
-      stop("找不到 Vast.app。请先安装到 /Applications/Vast.app", call. = FALSE)
+      stop("Vast.app not found. Install to /Applications/Vast.app", call. = FALSE)
     }
     ok <- system2("open", c("-g", "-j", "-a", app, "--args", "--api"),
                   stdout = FALSE, stderr = FALSE)
   }
   if (!is.null(ok) && !identical(ok, 0L) && !identical(ok, 0)) {
-    stop("无法启动 Vast", call. = FALSE)
+    stop("Failed to launch Vast", call. = FALSE)
   }
   t0 <- Sys.time()
   repeat {
     info <- vast_api_info()
     if (!is.null(info)) return(info)
     if (as.numeric(difftime(Sys.time(), t0, units = "secs")) > timeout) {
-      stop("Vast 已启动，但 API 未就绪。请确认应用版本 >= 0.6.2", call. = FALSE)
+      stop("Vast launched but the API is not ready. Require app version >= 0.6.2", call. = FALSE)
     }
     Sys.sleep(0.2)
   }
@@ -158,7 +158,7 @@ vast_request <- function(method, route, body = NULL, timeout = 30) {
   text <- paste(out, collapse = "\n")
   parsed <- tryCatch(fromJSON(text, simplifyVector = TRUE), error = function(e) NULL)
   if (is.null(parsed)) {
-    stop("Vast API 请求失败: ", text, call. = FALSE)
+    stop("Vast API request failed: ", text, call. = FALSE)
   }
   if (isFALSE(parsed$ok)) {
     stop(parsed$error %||% "request failed", call. = FALSE)
@@ -237,7 +237,7 @@ peek_column_names <- function(header = 1L) {
 new_vast_tbl <- function(status, col_names = NULL, delim = NULL, header = NULL) {
   path <- status$path
   if (is.null(path) || (length(path) == 1L && is.na(path))) {
-    stop("Vast 未打开文件", call. = FALSE)
+    stop("No file open in Vast", call. = FALSE)
   }
   if (is.null(delim)) {
     delim <- as.character(status$delim %||% "")
@@ -265,7 +265,7 @@ new_vast_tbl <- function(status, col_names = NULL, delim = NULL, header = NULL) 
 }
 
 vast_tbl_ensure <- function(x) {
-  if (!inherits(x, "vast_tbl")) stop("需要 vast_tbl（由 vast_open() 返回）", call. = FALSE)
+  if (!inherits(x, "vast_tbl")) stop("Expected a vast_tbl from vast_open()", call. = FALSE)
   path <- vast_tbl_meta(x, "path")
   delim <- vast_tbl_meta(x, "delim")
   header <- vast_tbl_meta(x, "header")
@@ -349,7 +349,7 @@ as.data.frame.vast_tbl <- function(x, row.names = NULL, optional = FALSE, ..., n
 
 vast_open <- function(path, delim = NULL, header = NULL, tail_bytes = NULL) {
   path <- path.expand(path)
-  if (!file.exists(path)) stop("文件不存在: ", path, call. = FALSE)
+  if (!file.exists(path)) stop("File not found: ", path, call. = FALSE)
   body <- list(path = normalizePath(path, winslash = "/", mustWork = TRUE))
   delim <- normalize_delim(delim)
   if (!is.null(delim)) body$delim <- delim_for_api(delim) %||% delim
@@ -405,7 +405,7 @@ vast_resolve_index_path <- function(x, path) {
   }
   src <- vast_tbl_meta(x, "path")
   if (is.null(src) || !nzchar(src)) {
-    stop("vast_tbl 缺少源文件路径", call. = FALSE)
+    stop("vast_tbl is missing the source file path", call. = FALSE)
   }
   base <- dirname(normalizePath(src, winslash = "/", mustWork = TRUE))
   normalizePath(file.path(base, path), winslash = "/", mustWork = FALSE)
@@ -418,7 +418,7 @@ vast_resolve_index_path <- function(x, path) {
 #' @export
 vast_build_index <- function(x, column, path = NULL, force = FALSE) {
   if (!inherits(x, "vast_tbl")) {
-    stop("需要 vast_tbl（由 vast_open() 返回）", call. = FALSE)
+    stop("Expected a vast_tbl from vast_open()", call. = FALSE)
   }
   vast_tbl_ensure(x)
   body <- list(column = column, force = isTRUE(force))
@@ -460,7 +460,7 @@ vast_sort <- function(x, column, order = c("asc", "desc"),
                       type = c("auto", "string", "numeric"),
                       path = NULL, na_last = TRUE, max_rows = 0) {
   if (!inherits(x, "vast_tbl")) {
-    stop("需要 vast_tbl（由 vast_open() 返回）", call. = FALSE)
+    stop("Expected a vast_tbl from vast_open()", call. = FALSE)
   }
   order <- match.arg(order)
   type <- match.arg(type)
@@ -508,7 +508,7 @@ vast_sort <- function(x, column, order = c("asc", "desc"),
 #' @export
 vast_attach_index <- function(x, column, path = NULL) {
   if (!inherits(x, "vast_tbl")) {
-    stop("需要 vast_tbl（由 vast_open() 返回）", call. = FALSE)
+    stop("Expected a vast_tbl from vast_open()", call. = FALSE)
   }
   vast_tbl_ensure(x)
   body <- list(column = column)
@@ -530,7 +530,7 @@ vast_attach_index <- function(x, column, path = NULL) {
 #' @export
 vast_detach_index <- function(x, column = NULL) {
   if (!inherits(x, "vast_tbl")) {
-    stop("需要 vast_tbl（由 vast_open() 返回）", call. = FALSE)
+    stop("Expected a vast_tbl from vast_open()", call. = FALSE)
   }
   vast_tbl_ensure(x)
   body <- list()
@@ -561,7 +561,7 @@ vast_layout <- function(delim = NULL, header = NULL) {
   delim <- normalize_delim(delim)
   if (!is.null(delim)) body$delim <- delim
   if (!is.null(header)) body$header <- as.integer(header)
-  if (!length(body)) stop("请提供 delim 或 header", call. = FALSE)
+  if (!length(body)) stop("Provide delim or header", call. = FALSE)
   invisible(vast_request("POST", "/v1/layout", body))
 }
 
@@ -589,16 +589,16 @@ parse_vast_filter_expr <- function(expr, env) {
     return(list(column = expr, value = NULL, op = NULL, incomplete = TRUE))
   }
   if (!is.call(expr) && !is.language(expr)) {
-    stop("无法解析筛选表达式", call. = FALSE)
+    stop("Cannot parse filter expression", call. = FALSE)
   }
   op <- as.character(expr[[1]])
 
   if (op %in% c("==", "=", "!=", ">", "<", ">=", "<=")) {
-    if (length(expr) != 3L) stop("比较表达式需要左右两侧", call. = FALSE)
+    if (length(expr) != 3L) stop("Comparison needs both sides", call. = FALSE)
     lhs <- expr[[2]]
     rhs <- expr[[3]]
     if (!is.symbol(lhs) && !(is.character(lhs) && length(lhs) == 1L)) {
-      stop("左侧应为列名，例如 value == \"...\"", call. = FALSE)
+      stop("Left side must be a column name, e.g. value == \"...\"", call. = FALSE)
     }
     column <- if (is.symbol(lhs)) as.character(lhs) else as.character(lhs)[[1]]
     value <- eval(rhs, envir = env)
@@ -606,11 +606,11 @@ parse_vast_filter_expr <- function(expr, env) {
   }
 
   if (op %in% c("%in%", "in")) {
-    if (length(expr) != 3L) stop("%in% 需要左右两侧", call. = FALSE)
+    if (length(expr) != 3L) stop("%in% needs both sides", call. = FALSE)
     lhs <- expr[[2]]
     rhs <- expr[[3]]
     if (!is.symbol(lhs) && !(is.character(lhs) && length(lhs) == 1L)) {
-      stop("左侧应为列名，例如 value %in% c(\"a\", \"b\")", call. = FALSE)
+      stop("Left side must be a column name, e.g. value %in% c(\"a\", \"b\")", call. = FALSE)
     }
     column <- if (is.symbol(lhs)) as.character(lhs) else as.character(lhs)[[1]]
     value <- eval(rhs, envir = env)
@@ -633,7 +633,7 @@ parse_vast_filter_expr <- function(expr, env) {
       if (length(args) < 2L) stop("grepl(pattern, column)", call. = FALSE)
       pat <- eval(args[[1]], envir = env)
       col <- args[[2]]
-      if (!is.symbol(col)) stop("grepl 的第二参数应为列名", call. = FALSE)
+      if (!is.symbol(col)) stop("grepl second argument must be a column name", call. = FALSE)
       return(list(
         column = as.character(col), value = as.character(pat)[[1]],
         op = "contains", ignore_case = ignore_case
@@ -647,7 +647,7 @@ parse_vast_filter_expr <- function(expr, env) {
       ignore_case <- isTRUE(eval(args[[3]], envir = env))
     }
     if (!is.symbol(col) && !(is.character(col) && length(col) == 1L)) {
-      stop(op, " 的第一参数应为列名", call. = FALSE)
+      stop(op, " first argument must be a column name", call. = FALSE)
     }
     column <- if (is.symbol(col)) as.character(col) else as.character(col)[[1]]
     mop <- op
@@ -657,8 +657,8 @@ parse_vast_filter_expr <- function(expr, env) {
     return(list(column = column, value = val, op = mop, ignore_case = ignore_case))
   }
 
-  stop("不支持的表达式: ", paste(deparse(expr), collapse = " "),
-       "\n可用: col == val, col %in% c(\"a\",\"b\"), contains(col, \"x\")",
+  stop("Unsupported expression: ", paste(deparse(expr), collapse = " "),
+       "\nSupported: col == val, col %in% c(\"a\",\"b\"), contains(col, \"x\")",
        call. = FALSE)
 }
 
@@ -748,7 +748,7 @@ head.vast_tbl <- function(x, n = 6L, ...) {
 #' @importFrom dplyr filter
 filter.vast_tbl <- function(.data, ..., .by = NULL, .preserve = FALSE) {
   if (!is.null(.by)) {
-    stop("vast_tbl 的 filter() 暂不支持 .by", call. = FALSE)
+    stop("vast_tbl filter() does not support .by yet", call. = FALSE)
   }
   vast_tbl_ensure(.data)
   dots <- as.list(substitute(list(...)))[-1L]
@@ -769,7 +769,7 @@ filter.vast_tbl <- function(.data, ..., .by = NULL, .preserve = FALSE) {
     for (i in seq(2L, length(dots))) {
       keep <- eval(dots[[i]], envir = out, enclos = env)
       if (!is.logical(keep) || length(keep) != nrow(out)) {
-        stop("额外的 filter 条件必须返回与行数相同的逻辑向量", call. = FALSE)
+        stop("Extra filter predicates must return a logical vector of length nrow", call. = FALSE)
       }
       out <- out[keep %in% TRUE, , drop = FALSE]
     }
@@ -783,13 +783,13 @@ filter.vast_tbl <- function(.data, ..., .by = NULL, .preserve = FALSE) {
 #' @importFrom dplyr arrange
 arrange.vast_tbl <- function(.data, ..., .by_group = FALSE) {
   if (isTRUE(.by_group)) {
-    stop("vast_tbl 的 arrange() 暂不支持 .by_group", call. = FALSE)
+    stop("vast_tbl arrange() does not support .by_group yet", call. = FALSE)
   }
   vast_tbl_ensure(.data)
   dots <- as.list(substitute(list(...)))[-1L]
   if (!length(dots)) return(.data)
   if (length(dots) > 1L) {
-    warning("vast_tbl arrange 暂只支持单列；其余排序键已忽略", call. = FALSE)
+    warning("vast_tbl arrange supports one column for now; extra keys ignored", call. = FALSE)
   }
   env <- parent.frame()
   spec <- parse_vast_arrange_expr(dots[[1]], env)
@@ -797,9 +797,9 @@ arrange.vast_tbl <- function(.data, ..., .by_group = FALSE) {
 }
 
 # ---- starts / ends / contains: same names in select() and filter() ----
-# select:  starts("value")            → 列名以 value 开头
-# filter:  starts(value, "Ori")       → 单元格以 Ori 开头（由 parse_vast_filter_expr 解析）
-# 若在 data.frame 上求值（第二条 filter 条件），走向量匹配。
+# select:  starts("value")            → column name starts with value
+# filter:  starts(value, "Ori")       → cell starts with Ori (via parse_vast_filter_expr)
+# On a data.frame (extra filter predicates), these do vector matching.
 
 starts <- function(x, match = NULL, ignore.case = TRUE) {
   if (!is.null(match)) {
@@ -839,7 +839,7 @@ select.vast_tbl <- function(.data, ...) {
   loc <- tidyselect::eval_select(rlang::expr(c(!!!rlang::enexprs(...))), data = .data)
   keep <- names(loc)
   if (!length(keep)) {
-    stop("select() 未选中任何列", call. = FALSE)
+    stop("select() matched no columns", call. = FALSE)
   }
   rebuild_vast_tbl(.data, col_names = keep, select = keep)
 }
@@ -849,7 +849,7 @@ unique.vast_tbl <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
   vast_tbl_ensure(x)
   cols <- names(x)
   if (!length(cols)) {
-    stop("没有列可取唯一值，请先 select()", call. = FALSE)
+    stop("No columns for unique(); select() first", call. = FALSE)
   }
   path <- vast_cache_path()
   body <- list(columns = as.list(cols), path = path)
@@ -863,7 +863,7 @@ distinct.vast_tbl <- function(.data, ..., .keep_all = FALSE) {
     .data <- dplyr::select(.data, ...)
   }
   if (isTRUE(.keep_all)) {
-    stop("vast_tbl 的 distinct() 暂不支持 .keep_all = TRUE", call. = FALSE)
+    stop("vast_tbl distinct() does not support .keep_all = TRUE yet", call. = FALSE)
   }
   unique(.data)
 }
@@ -877,7 +877,7 @@ vast_filter <- function(.data, ..., op = "==", max_rows = NULL,
         (!missing(collect) && !isTRUE(collect))) {
       vast_tbl_ensure(.data)
       dots <- as.list(substitute(list(...)))[-1L]
-      if (!length(dots)) stop("用法: x %>% filter(col == value)", call. = FALSE)
+      if (!length(dots)) stop("Usage: x %>% filter(col == value)", call. = FALSE)
       spec <- parse_vast_filter_expr(dots[[1]], env = parent.frame())
       out <- vast_filter_exec(
         column = spec$column, value = spec$value, op = spec$op %||% "==",
@@ -894,7 +894,7 @@ vast_filter <- function(.data, ..., op = "==", max_rows = NULL,
   column <- .data
   dots <- list(...)
   if (!length(dots)) {
-    stop("用法: filter(x, col == value) 或 vast_filter(column, value)", call. = FALSE)
+    stop("Usage: filter(x, col == value) or vast_filter(column, value)", call. = FALSE)
   }
   value <- dots[[1]]
   if (length(dots) >= 2L && is.character(dots[[2]]) &&

@@ -1,17 +1,14 @@
 \name{vast_goto}
-\alias{vast_goto}
-\title{vast_goto: 跳到行}
+\title{vast_goto: jump to a line}
 \description{
-跳转到当前打开文件中的指定行（1 起算），并高亮该行。
+Jump to a line in the open file (1-based) and highlight it.
 }
 \usage{
 vast_goto(line)
 }
 \arguments{
-\item{line}{行号，从 1 开始。}
+\item{line}{Line number starting at 1.}
 }
 \examples{
-\dontrun{
 vast_goto(100000)
-}
 }

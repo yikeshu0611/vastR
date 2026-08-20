@@ -1,18 +1,15 @@
 \name{vast_layout}
-\alias{vast_layout}
-\title{vast_layout: 设置分列与标题}
+\title{vast_layout: set delimiter and header}
 \description{
-设置当前文件的分列符和/或标题行数。
+Set the column delimiter and/or header row count for the current file.
 }
 \usage{
 vast_layout(delim = NULL, header = NULL)
 }
 \arguments{
-\item{delim}{\code{"tab"}、\code{","}、\code{""}/\code{"none"} 等。}
-\item{header}{标题行数；0 表示无标题。}
+\item{delim}{\code{"tab"}, \code{","}, \code{""}/\code{"none"}, etc.}
+\item{header}{Header row count; 0 means no header.}
 }
 \examples{
-\dontrun{
 vast_layout(delim = ",", header = 1)
-}
 }

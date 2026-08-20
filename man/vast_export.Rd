@@ -1,19 +1,17 @@
 \name{vast_export}
-\alias{vast_export}
-\title{vast_export: 导出行范围}
+\title{vast_export: export a line range}
 \description{
-把当前文件的指定行范围写出到磁盘文件。
+Write a line range from the current Vast file to disk.
 }
 \usage{
 vast_export(from, to, path, include_header = TRUE)
 }
 \arguments{
-\item{from, to}{行范围（1 起算）。}
-\item{path}{输出路径。}
-\item{include_header}{若当前有标题行且导出区间在标题之后，是否先写出标题。}
+\item{from, to}{Line range (1-based).}
+\item{path}{Output path.}
+\item{include_header}{If the file has header rows and the export range is after them,
+whether to write the header first.}
 }
 \examples{
-\dontrun{
 vast_export(1, 1000, tempfile(fileext = ".tsv"))
-}
 }

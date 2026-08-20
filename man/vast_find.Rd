@@ -1,18 +1,15 @@
 \name{vast_find}
-\alias{vast_find}
-\title{vast_find: 查找文本}
+\title{vast_find: find text}
 \description{
-在当前已索引范围内查找文本，并跳转到匹配行。
+Find text within the currently indexed range and jump to the matching line.
 }
 \usage{
 vast_find(q, from = NULL)
 }
 \arguments{
-\item{q}{要查找的字符串。}
-\item{from}{起始行（1 起算）；默认从当前高亮行之后开始。}
+\item{q}{String to find.}
+\item{from}{Start line (1-based); default is after the current highlight.}
 }
 \examples{
-\dontrun{
 vast_find("ERROR")
-}
 }

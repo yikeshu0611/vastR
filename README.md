@@ -2,86 +2,86 @@
 
 **Author:** ZhangJing \<zj391120@163.com\>
 
-在 R / RStudio 中驱动 macOS 大文件阅读器 **Vast**（通过本机 localhost JSON API）。
+Drive the macOS **Vast** large-file viewer from R / RStudio via a localhost JSON API.
 
-需要已安装 **Vast.app** 到 `/Applications/Vast.app`（版本建议 ≥ 0.6.2）。
+Requires **Vast.app** at `/Applications/Vast.app` (app version ≥ 0.6.2 recommended).
 
-## 安装
+## Install
 
-### 从 GitHub（推荐）
+### From GitHub (recommended)
 
 ```r
 # install.packages("remotes")
 remotes::install_github("yikeshu0611/vastR")
 ```
 
-### 从 Release 资源包
+### From a Release asset
 
-1. 打开 [Releases](https://github.com/yikeshu0611/vastR/releases)
-2. 下载 `vastR-x.y.z.zip`（Assets）
-3. 本地安装：
+1. Open [Releases](https://github.com/yikeshu0611/vastR/releases)
+2. Download `vastR-x.y.z.zip` from Assets
+3. Install locally:
 
 ```r
 install.packages("~/Downloads/vastR-0.6.34.zip", repos = NULL, type = "source")
-# 若解压成文件夹：
+# or, if unzipped to a folder:
 # install.packages("~/Downloads/vastR", repos = NULL, type = "source")
 ```
 
-## 快速开始
+## Quick start
 
 ```r
 library(vastR)
 library(dplyr)
 
-# 打开大文件（不会整表读进内存）
+# Open a large file (does not load the whole table into memory)
 t <- vast_open("~/data/huge.csv", delim = ",", header = 1)
 
-# 预览
+# Preview
 head(t)
 
-# 筛选（可走列索引加速）
+# Filter (can use a column index when attached)
 t %>% filter(itemid == "2257526")
 
-# 排序（返回新的 vast_tbl / 写出 TSV）
+# Sort (returns a new vast_tbl / writes a TSV)
 t %>% arrange(desc(charttime))
-# 或
+# or
 vast_sort(t, "charttime", order = "desc", max_rows = 1000)
 
-# 列索引
+# Column index
 idx <- vast_build_index(t, "itemid", path = "itemid.vidx")
 t <- vast_attach_index(t, "itemid", path = idx)
-# … filter / sort 会优先用索引
+# … filter / sort prefer the index when available
 vast_detach_index(t)
 
-# 其它
+# Other
 vast_status()
 vast_goto(100000)
 vast_find("ERROR")
 vast_is_running()
 ```
 
-把内存里的 data.frame 丢进 Vast 看：
+Send an in-memory data.frame to Vast:
 
 ```r
 vast_view(mtcars)
 ```
 
-## 主要函数
+## Main functions
 
-| 函数 | 作用 |
-|------|------|
-| `vast_open` / `vast_view` | 打开文件或 data.frame |
-| `filter` / `select` / `arrange` | dplyr 风格（在 Vast 侧扫文件） |
-| `vast_filter` / `vast_sort` | 显式筛选 / 排序 |
-| `vast_build_index` / `vast_attach_index` / `vast_detach_index` | 列唯一值索引 |
-| `vast_read` / `vast_export` | 导出行片段到本地再读入 |
-| `vast_layout` / `vast_goto` / `vast_find` / `vast_status` | 布局与导航 |
+| Function | Purpose |
+|----------|---------|
+| `vast_open` / `vast_view` | Open a file or data.frame |
+| `filter` / `select` / `arrange` | dplyr-style verbs (run in Vast) |
+| `vast_filter` / `vast_sort` | Explicit filter / sort |
+| `vast_build_index` / `vast_attach_index` / `vast_detach_index` | Column unique-value index |
+| `vast_read` / `vast_export` | Export a line range, then read it |
+| `vast_layout` / `vast_goto` / `vast_find` / `vast_status` | Layout and navigation |
 
-## 说明
+## Notes
 
-- Vast 运行时会写 `~/Library/Application Support/com.qo.vast/api.json`（Mac App Store 沙盒版则在 Container 路径下）。`vastR` 会自动查找。
-- 沙盒版首次用 API 打开沙盒外文件时，可能需要在 Vast 里点选授权一次。
+- While Vast is running it writes `~/Library/Application Support/com.qo.vast/api.json` (or under the Mac App Store container). `vastR` discovers both paths.
+- On the sandboxed build, the first API open of a file outside the sandbox may ask you to pick the file once in Vast.
 
-## 许可证
+## License
 
 MIT
