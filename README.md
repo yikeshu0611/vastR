@@ -1,6 +1,8 @@
 # vastR
 
-在 R / RStudio 中驱动 macOS 大文件阅读器 **[Vast](https://github.com/yikeshu0611)**（通过本机 localhost JSON API）。
+**Author:** ZhangJing \<zj391120@163.com\>
+
+在 R / RStudio 中驱动 macOS 大文件阅读器 **Vast**（通过本机 localhost JSON API）。
 
 需要已安装 **Vast.app** 到 `/Applications/Vast.app`（版本建议 ≥ 0.6.2）。
 
